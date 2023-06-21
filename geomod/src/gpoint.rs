@@ -24,6 +24,14 @@ pub mod gpoint {
         fn dump(&self) -> String {
             format!("GPoint {{ x: {}, y: {}, z: {} }}", self.x, self.y, self.z)
         }
+
+        fn format(&self) -> String {
+            format!("GPoint {{ x: {}, y: {}, z: {} }}", self.x, self.y, self.z)
+        } 
+
+        fn string_init(string: String) -> Self {
+            GPoint { x: 0.0, y: 0.0, z: 0.0 }
+        }
     }
-}
+} 
 

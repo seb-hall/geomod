@@ -6,21 +6,21 @@
 
 use crate::gpoint;
 
-pub struct GLine {
+pub mod gline {
 
-    pub start: GPoint, 
-    pub end: GPoint
-
-}
-
-impl GLine {
-
-    pub fn init(start: GPoint, end: GPoint) -> Self {
-        GLine { start: start, end: end }
+    pub struct GLine {
+        pub start: GPoint, 
+        pub end: GPoint
     }
-
-    pub fn dump() {
-        
+    
+    impl GLine {
+        pub fn init(start: GPoint, end: GPoint) -> Self {
+            GLine { start: start, end: end }
+        }
+    
+        pub fn dump() {
+            
+        }
+    
     }
-
 }
