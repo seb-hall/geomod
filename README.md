@@ -1,6 +1,6 @@
 # geomod
 
-a new geometric modelling kernel
+an open-source geometric modelling kernel
 
 ## overview
 
