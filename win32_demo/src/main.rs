@@ -1,6 +1,9 @@
 use windows::{
-    core::*, Win32::Foundation::*, Win32::Graphics::Gdi::*,
-    Win32::{System::LibraryLoader::GetModuleHandleA, Graphics::Gdi::BeginPaint}, Win32::UI::WindowsAndMessaging::*,
+    core::*, 
+    Win32::Foundation::*, 
+    Win32::{System::LibraryLoader::GetModuleHandleA, Graphics::Gdi::BeginPaint}, 
+    Win32::UI::WindowsAndMessaging::*,
+    Win32::Graphics::Gdi::*,
     Win32::Graphics::OpenGL::*,
 };
 
