@@ -97,16 +97,7 @@ extern "system" fn wndproc(window: HWND, message: u32, wparam: WPARAM, lparam: L
         match message {
             WM_PAINT => {
                 //println!("WM_PAINT");
-                /*let mut ps: PAINTSTRUCT = PAINTSTRUCT { ..Default::default() };
-                let hdc = BeginPaint(window, &mut ps);
-                let message = String::from("Hello, Windows!");
-                let mut rect: RECT = RECT { ..Default::default() };
-                GetClientRect(window, &mut rect);
-
-                //let brush: HBRUSH = CreateSolidBrush(color as COLORREF);
-                //FillRect(hdc,rect, &mut brush);
-                TextOutA(hdc, 0, 0, &message.as_bytes());
-                EndPaint(window, &mut ps);*/
+                
 
                 let hdc =  GetDC(window);
 
@@ -134,6 +125,16 @@ extern "system" fn wndproc(window: HWND, message: u32, wparam: WPARAM, lparam: L
                 glEnd();
 
                 SwapBuffers(hdc);
+
+                let mut ps: PAINTSTRUCT = PAINTSTRUCT { ..Default::default() };
+                let hdc = BeginPaint(window, &mut ps);
+               
+                //let mut rect: RECT = RECT { ..Default::default() };
+                //GetClientRect(window, &mut rect);
+                let message = format!("Hello, Windows! {}, {}", rect.right, rect.bottom);
+                TextOutA(hdc, 0, 0, &message.as_bytes());
+                EndPaint(window, &mut ps);
+
                 ValidateRect(window, None);
                 LRESULT(0)
             }
