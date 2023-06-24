@@ -1,9 +1,8 @@
-//  GLine.rs   created by sebhall on 20/06/2023
+//  GTri.rs   created by sebhall on 20/06/2023
 //
-//  GLine is the basic Line structure for GEOMOD
+//  GTri is the basic Line structure for GEOMOD
 
-//  the line is a basic entity representing a 
-//  connection between two points in space
+//  the tri or triangle is 
 
 use crate::gpoint;
 

@@ -2,7 +2,8 @@
 //
 //  GPoint is the basic Point structure for GEOMOD
 
-//  the point represents the most fundamental entity in geometry - merely a single location in space
+//  the point represents the most fundamental entity 
+//  in geometry - merely a single location in space
 
 
 pub mod gpoint {

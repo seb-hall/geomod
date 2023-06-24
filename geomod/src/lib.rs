@@ -30,7 +30,10 @@
 //  architectural CAD software, animation design and
 //  surface modelling applications. geomod is also
 //  designed to act as a fully-featured game engine.
-
+//
+//    
+//  
+//
 
 pub mod gobject;
 pub mod gpoint;
