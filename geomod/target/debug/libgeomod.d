@@ -1,1 +1,0 @@
-C:\Users\sebam\Documents\geomod\geomod\target\debug\libgeomod.rlib: C:\Users\sebam\Documents\geomod\geomod\src\gobject.rs C:\Users\sebam\Documents\geomod\geomod\src\gpoint.rs C:\Users\sebam\Documents\geomod\geomod\src\lib.rs
