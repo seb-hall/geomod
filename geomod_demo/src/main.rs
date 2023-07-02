@@ -8,6 +8,9 @@ use glutin::window::WindowBuilder;
 use glutin::window::Window;
 use glutin::{Api, ContextBuilder, GlRequest};
 
+use gl::types::*;
+use gl::*;
+
 fn main() {
     let event_loop = EventLoop::new();
 
@@ -45,7 +48,7 @@ fn main() {
             Event::LoopDestroyed => (),
             Event::WindowEvent { event, .. } => match event {
                 WindowEvent::CursorMoved { position, ..}   => {
-                    println!("{}", format!("mouse moved to {} {}", position.x, position.y));
+                    //println!("{}", format!("mouse moved to {} {}", position.x, position.y));
                     if (is_dragging) {
                         if (cursor_drag_origin.is_none()) {
                             cursor_drag_origin = Some(Pos { x: position.x as f32, y: position.y as f32} );
@@ -63,8 +66,8 @@ fn main() {
                 WindowEvent::MouseWheel { delta, ..}   => {
                     match delta { 
                         glutin::event::MouseScrollDelta::LineDelta(x, y) => {
-                            println!("{}", format!("axis moved to {}", y));
-                            renderer.gridscale += y;
+                            //println!("{}", format!("axis moved to {}", y));
+                            renderer.gridscale += y/10.0;
                             gl_context.window().request_redraw();
                         }, 
                         _ => { }
@@ -79,10 +82,10 @@ fn main() {
                     if (button == glutin::event::MouseButton::Middle) {
                         if (state == glutin::event::ElementState::Pressed) {
                             is_dragging = true;
-                            println!("middle down");
+                            //println!("middle down");
                         } else {
                             is_dragging = false;
-                            println!("middle up");
+                            //println!("middle up");
                             cursor_drag_origin = None;
                         }
                     }
@@ -90,13 +93,17 @@ fn main() {
                 },
                 WindowEvent::Resized(physical_size) => {
                     gl_context.resize(physical_size);
+                    unsafe {
+                        gl::Viewport(0, 0, physical_size.width as i32, physical_size.height as i32);
+                    }
+                    
                     gl_context.window().set_title(&format!("GEOMOD demo - {},{}", physical_size.width, physical_size.height)[..]);
                 },
                 WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
                 _ => (),
             },
             Event::RedrawRequested(_) => {
-                println!("draw!");
+                //println!("draw!");
                 renderer.draw();
                 gl_context.swap_buffers().unwrap();
             }

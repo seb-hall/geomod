@@ -6,14 +6,24 @@ uniform float gridScale;
 
 void main() {
 
-    float gridSpacing = 50 + gridScale; 
+    float gridSpacing = 50*gridScale; 
+
+
     vec2 pos = gl_FragCoord.xy + gridOffset;
-    vec2 offset = mod(pos, gridSpacing);
-    if (offset.x < 1 || offset.y < 1) {
+
+    vec2 majorOffset = mod(pos, gridSpacing);
+    if (majorOffset.x < 1 || majorOffset.y < 1) {
         FragColor = vec4(1.0, 1.0, 1.0, 0.125);
-    } else {
-        FragColor = vec4(0.0);
+        return;
+    }
+
+    vec2 minorOffset = mod(pos, gridSpacing / 10.0);
+    if (minorOffset.x < 1 || minorOffset.y < 1) {
+        FragColor = vec4(1.0, 1.0, 1.0, 0.05);
+        return;
     }
 
     
+
+    FragColor = vec4(0.0);
 }

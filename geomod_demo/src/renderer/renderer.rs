@@ -57,6 +57,7 @@ pub struct RenderPassCrap {
 pub struct Renderer {
     basic_shader: RenderPassCrap,
     grid_shader: RenderPassCrap,
+    tool_shader: RenderPassCrap,
     pub mousepos: [f32; 2],
     pub gridoffset: [f32; 2],
     pub gridscale: f32
@@ -68,12 +69,15 @@ impl Renderer {
             //
             let grid_shader: RenderPassCrap = make_grid_shader();
             let basic_shader: RenderPassCrap = make_basic_shader();
+            let tool_shader: RenderPassCrap = make_tool_shader();
+
             return Ok( Self {
                 basic_shader,
                 grid_shader,
+                tool_shader,
                 mousepos: [0.0, 0.0],
                 gridoffset: [0.0, 0.0],
-                gridscale: 50.0
+                gridscale: 1.0
             });
         }
         
@@ -84,11 +88,23 @@ impl Renderer {
         unsafe {
             
             self.grid_shader.shader.apply();
+            gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+            gl::Enable(gl::BLEND);
             self.grid_shader.vertex_array.bind();
             gl::ClearColor(0.1, 0.1, 0.1, 1.0);
             gl::Clear(gl::COLOR_BUFFER_BIT);
             gl::Uniform2f(gl::GetUniformLocation(self.grid_shader.shader.id, CString::new("gridOffset").unwrap().as_ptr()), self.gridoffset[0], self.gridoffset[1]);
             gl::Uniform1f(gl::GetUniformLocation(self.grid_shader.shader.id, CString::new("gridScale").unwrap().as_ptr()), self.gridscale);
+            gl::DrawArrays(gl::TRIANGLES, 0, 6);
+
+            
+            self.tool_shader.shader.apply();
+            gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+            gl::Enable(gl::BLEND);
+            self.tool_shader.vertex_array.bind();
+            gl::Uniform2f(gl::GetUniformLocation(self.tool_shader.shader.id, CString::new("gridOffset").unwrap().as_ptr()), self.gridoffset[0], self.gridoffset[1]);
+            gl::Uniform1f(gl::GetUniformLocation(self.tool_shader.shader.id, CString::new("gridScale").unwrap().as_ptr()), self.gridscale);
+            gl::Uniform2f(gl::GetUniformLocation(self.tool_shader.shader.id, CString::new("mousePos").unwrap().as_ptr()), self.mousepos[0], self.mousepos[1]);
             gl::DrawArrays(gl::TRIANGLES, 0, 6);
 
             
@@ -140,6 +156,37 @@ pub unsafe fn make_basic_shader() -> RenderPassCrap {
 pub unsafe fn make_grid_shader() -> RenderPassCrap {
     let vertex_source = fs::read_to_string("shaders/grid/grid.vs").unwrap();
     let fragment_source = fs::read_to_string("shaders/grid/grid.fs").unwrap();
+    let vertex_shader = Shader::new(&vertex_source[..], gl::VERTEX_SHADER).unwrap();
+    let fragment_shader = Shader::new(&fragment_source[..], gl::FRAGMENT_SHADER).unwrap();
+    let shader = ShaderProgram::new(&[vertex_shader, fragment_shader]).unwrap();
+    shader.apply();
+
+    let vertex_array = VertexArray::new();
+    vertex_array.bind();
+
+    let vertex_buffer = Buffer::new(gl::ARRAY_BUFFER);
+    vertex_buffer.set_data(&FULL, gl::STATIC_DRAW);
+
+    let pos_attrib = shader.get_attrib_location("position").unwrap();
+    set_attribute!(vertex_array, pos_attrib, Vertex::0);
+    let color_attrib = shader.get_attrib_location("vertexTexCoord").unwrap();
+    set_attribute!(vertex_array, color_attrib, Vertex::1);
+
+    //gl::Uniform2f(gl::GetUniformLocation(shader.id, CString::new("gridOffset").unwrap().as_ptr()), 0.0, 0.0);
+
+    gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+    gl::Enable(gl::BLEND);
+
+    return RenderPassCrap {
+        shader: shader,
+        vertex_buffer: vertex_buffer,
+        vertex_array: vertex_array
+    }
+}
+
+pub unsafe fn make_tool_shader() -> RenderPassCrap {
+    let vertex_source = fs::read_to_string("shaders/tool/tool.vs").unwrap();
+    let fragment_source = fs::read_to_string("shaders/tool/tool.fs").unwrap();
     let vertex_shader = Shader::new(&vertex_source[..], gl::VERTEX_SHADER).unwrap();
     let fragment_shader = Shader::new(&fragment_source[..], gl::FRAGMENT_SHADER).unwrap();
     let shader = ShaderProgram::new(&[vertex_shader, fragment_shader]).unwrap();
